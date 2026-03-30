@@ -1,0 +1,24 @@
+{
+  "name": "adops-newsletter-editor",
+  "version": "1.0.0",
+  "description": "AdOps Newsletter Editor — build and export your monthly newsletter without touching HTML.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win",
+    "build-linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.equativ.newsletter-editor",
+    "productName": "AdOps Newsletter Editor",
+    "directories": { "output": "dist" },
+    "mac": { "category": "public.app-category.productivity" },
+    "win": { "target": "nsis" },
+    "linux": { "target": "AppImage" }
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.0.0"
+  }
+}

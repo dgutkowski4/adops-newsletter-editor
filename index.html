@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdOps Newsletter Editor</title>
+<style>
+/* ── Reset & Base ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f0f0f0;
+  color: #1a1a1a;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Title Bar ── */
+.titlebar {
+  height: 48px;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  gap: 16px;
+  border-bottom: 1px solid #333;
+}
+.titlebar-logo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+  -webkit-app-region: no-drag;
+}
+.titlebar-logo span { color: #f97316; }
+.titlebar-spacer { flex: 1; }
+.titlebar-btn {
+  -webkit-app-region: no-drag;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  color: #ccc;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.titlebar-btn:hover { background: #333; color: #fff; }
+.titlebar-btn.primary {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+  font-weight: 600;
+}
+.titlebar-btn.primary:hover { background: #ea6c04; }
+
+/* ── App Body ── */
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 300px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid #e8e8e8;
+}
+.sidebar-tab {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #888;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.sidebar-tab.active { color: #f97316; border-bottom-color: #f97316; }
+.sidebar-panel { display: none; flex: 1; overflow-y: auto; padding: 16px; }
+.sidebar-panel.active { display: block; }
+
+/* ── Form Fields ── */
+.field-group {
+  margin-bottom: 20px;
+}
+.field-group + .section-divider {
+  margin-top: 4px;
+}
+.section-divider {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #aaa;
+  margin: 22px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.section-divider:first-child { margin-top: 4px; }
+
+label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 5px;
+  letter-spacing: 0.3px;
+}
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: #1a1a1a;
+  background: #fafafa;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical;
+}
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+  background: #fff;
+}
+textarea { min-height: 72px; line-height: 1.5; }
+
+/* Toggle switch */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.toggle-row:hover { background: #f5f5f5; }
+.toggle-label { font-size: 12px; font-weight: 600; color: #333; }
+.toggle-sub { font-size: 10px; color: #999; margin-top: 1px; }
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #ddd;
+  border-radius: 20px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  left: 3px; top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .toggle-slider { background: #f97316; }
+.toggle input:checked + .toggle-slider:before { transform: translateX(16px); }
+
+/* ── Campaign Cards ── */
+.card-item {
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-left: 3px solid #f97316;
+  border-radius: 0 8px 8px 0;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.card-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.card-item-header input {
+  flex: 1;
+  font-weight: 700;
+  font-size: 12px;
+}
+.card-remove {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.card-remove:hover { color: #e53e3e; background: #fff0f0; }
+.add-card-btn {
+  width: 100%;
+  padding: 9px;
+  border: 1.5px dashed #f97316;
+  border-radius: 8px;
+  background: none;
+  color: #f97316;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.add-card-btn:hover { background: #fff7f0; }
+
+/* Stats inputs */
+.stat-row-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.stat-input-group { }
+.stat-input-group label { font-size: 10px; }
+
+/* ── Preview Panel ── */
+.preview-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #e8e8e8;
+}
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+.preview-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+}
+.preview-spacer { flex: 1; }
+.preview-note {
+  font-size: 11px;
+  color: #aaa;
+}
+.preview-frame-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+iframe#preview {
+  width: 700px;
+  height: 100%;
+  min-height: 600px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+  background: #fff;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #1a1a1a;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: transform 0.3s ease;
+  z-index: 9999;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: #16a34a; }
+.toast.error { background: #dc2626; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #ccc; }
+</style>
+</head>
+<body>
+
+<!-- Title Bar -->
+<div class="titlebar">
+  <div class="titlebar-logo">Ad<span>Ops</span> Newsletter Editor</div>
+  <div class="titlebar-spacer"></div>
+  <button class="titlebar-btn" onclick="loadDraft()">📂 Load Draft</button>
+  <button class="titlebar-btn" onclick="saveDraft()">💾 Save Draft</button>
+  <button class="titlebar-btn primary" onclick="exportNewsletter()">⬇ Export HTML</button>
+</div>
+
+<!-- App Body -->
+<div class="app-body">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-tabs">
+      <div class="sidebar-tab active" onclick="switchTab('content')">Content</div>
+      <div class="sidebar-tab" onclick="switchTab('sections')">Sections</div>
+      <div class="sidebar-tab" onclick="switchTab('cards')">Campaigns</div>
+    </div>
+
+    <!-- CONTENT TAB -->
+    <div class="sidebar-panel active" id="tab-content">
+
+      <div class="section-divider">Header</div>
+      <div class="field-group">
+        <label>Newsletter Title</label>
+        <input type="text" id="f-title" value="AdOps Newsletter" oninput="update()">
+      </div>
+      <div class="field-group">
+        <label>Issue Subtitle (e.g. "February &amp; March Update")</label>
+        <input type="text" id="f-subtitle" value="February &amp; March 2026" oninput="update()">
+      </div>
+      <div class="field-group">
+        <label>Eyebrow Label</label>
+        <input type="text" id="f-eyebrow" value="Internal Update" oninput="update()">
+      </div>
+
+      <div class="section-divider">Intro</div>
+      <div class="field-group">
+        <label>Greeting / Opening Paragraph</label>
+        <textarea id="f-intro" rows="4" oninput="update()">Hello Team,
+
+I hope everyone has had a great week. Here is a combined Newsletter detailing what's new in the world of AdOps!</textarea>
+      </div>
+
+      <div class="section-divider">Pause Ads Section</div>
+      <div class="field-group">
+        <label>Section Title</label>
+        <input type="text" id="f-pa-title" value="Pause Ads" oninput="update()">
+      </div>
+      <div class="field-group">
+        <label>Body Content</label>
+        <textarea id="f-pa-body" rows="6" oninput="update()">Early in March, we onboarded OpenGlass to our SSP. OpenGlass now allows us to target Pause Ads easily on the BKO! We are running our first campaign now and will have more information to share soon.
+
+Important things to note: this is a pure brand awareness play. We will not be reporting on VTR — only impressions and reach. We should always couple pause ad campaigns with an onsite pixel to create a story.
+
+On BKO, pause ads are limited to Philo, Tubi, and DIRECTV. $40 base selling CPM.
+
+This Confluence page details what is available for premium Pause Ads. Note: All premium options run as a PG campaign requiring The Trade Desk.</textarea>
+      </div>
+      <div class="field-group">
+        <label>Bullet Points (one per line)</label>
+        <textarea id="f-pa-bullets" rows="3" oninput="update()">One month minimum heads-up before campaign launch to set up the deal.
+Very high client minimum — all products are north of $300k client spends.</textarea>
+      </div>
+
+      <div class="section-divider">Efficiency Applications Section</div>
+      <div class="field-group">
+        <label>Section Title</label>
+        <input type="text" id="f-ea-title" value="Efficiency Applications" oninput="update()">
+      </div>
+      <div class="field-group">
+        <label>Body Content</label>
+        <textarea id="f-ea-body" rows="5" oninput="update()">Harrison has been hard at work creating new applications and tools to aid in operational workflows. New to AdOps is a dedicated application for tracking third-party platform campaigns — previously managed manually in Excel, now replaced with a purpose-built website.
+
+We're also happy to announce the Margin Calculator — a new website for Sellers, Strategy, and AdOps with full product offering details across all platforms.</textarea>
+      </div>
+      <div class="field-group">
+        <label>Bullet Points (one per line)</label>
+        <textarea id="f-ea-bullets" rows="3" oninput="update()">Accurately create media plans with different products and selling CPMs to forecast total campaign margin.
+Save media plans to edit at a later date.
+Export data to Excel to share with others.</textarea>
+      </div>
+
+      <div class="section-divider">Coming Soon Section</div>
+      <div class="field-group">
+        <label>Section Title</label>
+        <input type="text" id="f-cs-title" value="Coming Soon: Amazon Sponsored Ads" oninput="update()">
+      </div>
+      <div class="field-group">
+        <label>Body Content</label>
+        <textarea id="f-cs-body" rows="4" oninput="update()">Alex is currently running a test campaign for a new product offering — Amazon Sponsored Ads. While not yet ready for market, this is a compelling addition for CPG clients selling on Amazon, enabling clicks directly to their products and tracking ROAS and purchase totals.
+
+We'll share internal and external one-sheeters with the full team announcement when it's ready to go to market.</textarea>
+      </div>
+      <div class="field-group">
+        <label>Callout Note (leave blank to hide)</label>
+        <input type="text" id="f-cs-note" value="Key advantage: Zero pixels needed. | Note: Geo-targeting is limited to country-wide." oninput="update()">
+      </div>
+
+      <div class="section-divider">Campaign Highlights Intro</div>
+      <div class="field-group">
+        <label>Intro paragraph</label>
+        <textarea id="f-ch-intro" rows="2" oninput="update()">This section is dedicated to the teams on our largest campaigns who consistently go above and beyond.</textarea>
+      </div>
+
+      <div class="section-divider">Q1 Stats Section</div>
+      <div class="field-group">
+        <label>Section Title</label>
+        <input type="text" id="f-qs-title" value="Q1 Stats" oninput="update()">
+      </div>
+      <div class="stat-row-inputs">
+        <div class="stat-input-group">
+          <label>Stat 1 Number</label>
+          <input type="text" id="f-stat1-num" value="65%" oninput="update()">
+        </div>
+        <div class="stat-input-group">
+          <label>Stat 1 Label</label>
+          <input type="text" id="f-stat1-lbl" value="Overall Margin" oninput="update()">
+        </div>
+      </div>
+      <div class="stat-row-inputs">
+        <div class="stat-input-group">
+          <label>Stat 2 Number</label>
+          <input type="text" id="f-stat2-num" value="6%" oninput="update()">
+        </div>
+        <div class="stat-input-group">
+          <label>Stat 2 Label</label>
+          <input type="text" id="f-stat2-lbl" value="3P Platform Revenue Share" oninput="update()">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Summary Paragraph</label>
+        <textarea id="f-qs-body" rows="4" oninput="update()">An impressive 65% overall margin across all managed service clients — this would not be possible without the Ops team's hard work ensuring smart media purchases that meet both client KPIs and internal goals.
+
+Third-party platform campaigns continue to grow, now accounting for 6% of total revenue this quarter.</textarea>
+      </div>
+
+      <div class="section-divider">Footer</div>
+      <div class="field-group">
+        <label>Footer Copyright Text</label>
+        <input type="text" id="f-footer" value="© 2026 AdOps Team Newsletter" oninput="update()">
+      </div>
+      <div class="field-group">
+        <label>Footer Tag (right side)</label>
+        <input type="text" id="f-footer-tag" value="EQUATIV · INTERNAL" oninput="update()">
+      </div>
+    </div>
+
+    <!-- SECTIONS TAB -->
+    <div class="sidebar-panel" id="tab-sections">
+      <div class="section-divider">Toggle Sections On/Off</div>
+      <p style="font-size:11px;color:#999;margin-bottom:16px;line-height:1.5;">
+        Disable sections that aren't relevant this month. They'll be hidden from the exported newsletter.
+      </p>
+
+      <div class="toggle-row" onclick="toggleSection('intro-block')">
+        <div>
+          <div class="toggle-label">Intro / Greeting</div>
+          <div class="toggle-sub">Opening paragraph</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-intro" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSection('topics-block')">
+        <div>
+          <div class="toggle-label">In This Issue Box</div>
+          <div class="toggle-sub">Topic summary banner</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-topics" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSection('pause-block')">
+        <div>
+          <div class="toggle-label">Pause Ads</div>
+          <div class="toggle-sub">OpenGlass / SSP updates</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-pa" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSection('efficiency-block')">
+        <div>
+          <div class="toggle-label">Efficiency Applications</div>
+          <div class="toggle-sub">Tools & app announcements</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-ea" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSection('comingsoon-block')">
+        <div>
+          <div class="toggle-label">Coming Soon</div>
+          <div class="toggle-sub">Product pipeline announcements</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-cs" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSection('highlights-block')">
+        <div>
+          <div class="toggle-label">Campaign Highlights</div>
+          <div class="toggle-sub">Team recognition cards</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-ch" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSection('stats-block')">
+        <div>
+          <div class="toggle-label">Q1 Stats</div>
+          <div class="toggle-sub">Margin & revenue metrics</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" id="tog-qs" checked onchange="update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- CAMPAIGNS TAB -->
+    <div class="sidebar-panel" id="tab-cards">
+      <div class="section-divider">Campaign Highlight Cards</div>
+      <p style="font-size:11px;color:#999;margin-bottom:14px;line-height:1.5;">
+        Add, edit, or remove campaign cards. Changes reflect live in the preview.
+      </p>
+      <div id="cards-list"></div>
+      <button class="add-card-btn" onclick="addCard()">+ Add Campaign Card</button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview-panel">
+    <div class="preview-toolbar">
+      <span class="preview-label">Live Preview</span>
+      <span class="preview-spacer"></span>
+      <span class="preview-note">Updates as you type</span>
+    </div>
+    <div class="preview-frame-wrap">
+      <iframe id="preview" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const { ipcRenderer } = require('electron');
+
+// ── State ──
+let cards = [
+  { title: 'Phidel', team: 'Larry, Jeremy, and Nelly', body: 'have all gone above and beyond — from 400+ ad units and weekly optimization calls to detailed reports and last-minute budget changes.' },
+  { title: 'HunterBlu', team: 'Annie, Anastasia, and Brian', body: 'are running the most successful CPG campaign here at Equativ — driving a ROAS of 9.46x ($1,454,504.20 in client revenue) across multiple brands with 3,000+ ad units.' },
+  { title: 'Idea Rebel', team: 'Naomi, Sam, Alejandro, and Harrison', body: 'consistently deliver quarter over quarter for a complex client — managing 15+ budgets split between states, strategies, and creatives.' },
+  { title: 'AdmerAsia + Sticky Pixel', team: 'Naomi, Sam, Jeremy, David, and seven traffic managers', body: 'consistently deliver for our top client across last-minute setups, strict guidelines, dozens of budget splits, complex language targeting, and 125 million impressions served this quarter.' },
+];
+
+// ── Tab Switching ──
+function switchTab(name) {
+  document.querySelectorAll('.sidebar-tab').forEach((t, i) => {
+    const names = ['content', 'sections', 'cards'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function toggleSection(id) {
+  const map = {
+    'intro-block': 'tog-intro',
+    'topics-block': 'tog-topics',
+    'pause-block': 'tog-pa',
+    'efficiency-block': 'tog-ea',
+    'comingsoon-block': 'tog-cs',
+    'highlights-block': 'tog-ch',
+    'stats-block': 'tog-qs',
+  };
+  const cb = document.getElementById(map[id]);
+  if (cb) { cb.checked = !cb.checked; update(); }
+}
+
+// ── Card Management ──
+function renderCardsList() {
+  const list = document.getElementById('cards-list');
+  list.innerHTML = '';
+  cards.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'card-item';
+    el.innerHTML = `
+      <div class="card-item-header">
+        <input type="text" placeholder="Client / Campaign Name" value="${esc(card.title)}"
+          oninput="cards[${i}].title=this.value;update()">
+        <button class="card-remove" onclick="removeCard(${i})" title="Remove">×</button>
+      </div>
+      <div style="margin-bottom:6px">
+        <label>Team Members</label>
+        <input type="text" placeholder="e.g. Alice, Bob, and Carol" value="${esc(card.team)}"
+          oninput="cards[${i}].team=this.value;update()">
+      </div>
+      <div>
+        <label>Description</label>
+        <textarea rows="3" placeholder="What did this team accomplish?" oninput="cards[${i}].body=this.value;update()">${esc(card.body)}</textarea>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function addCard() {
+  cards.push({ title: '', team: '', body: '' });
+  renderCardsList();
+  update();
+  // Scroll to bottom of cards list
+  const panel = document.getElementById('tab-cards');
+  setTimeout(() => panel.scrollTop = panel.scrollHeight, 50);
+}
+
+function removeCard(i) {
+  cards.splice(i, 1);
+  renderCardsList();
+  update();
+}
+
+function esc(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Get field values ──
+function v(id) { return document.getElementById(id)?.value || ''; }
+function checked(id) { return document.getElementById(id)?.checked !== false; }
+
+function bulletList(text) {
+  return text.split('\n').filter(l => l.trim()).map(l =>
+    `<li>${l.trim()}</li>`
+  ).join('');
+}
+
+function paragraphs(text) {
+  return text.split('\n').filter(l => l.trim()).map(l =>
+    `<p>${l.trim()}</p>`
+  ).join('');
+}
+
+// ── Build Newsletter HTML ──
+function buildHTML(forExport = false) {
+  const show = (id) => checked(id);
+
+  // Inline the full CSS (Gmail-compatible)
+  const css = `
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f0f0f0;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 24px 12px 48px;
+    line-height: 1.65;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .header {
+    background: #ffffff;
+    padding: 36px 44px 28px;
+    border-bottom: 3px solid #f97316;
+  }
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #f97316;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+  }
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0 0 4px 0;
+    color: #111111;
+  }
+  .header h1 span { color: #f97316; }
+  .header-sub {
+    font-size: 11px;
+    color: #888888;
+    letter-spacing: 1px;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .content { padding: 32px 44px; }
+  .intro {
+    font-size: 15px;
+    color: #333333;
+    margin-bottom: 26px;
+    line-height: 1.75;
+  }
+  .topics-box {
+    background: #fff7f0;
+    border: 1px solid #fdd5b0;
+    border-left: 4px solid #f97316;
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin-bottom: 36px;
+  }
+  .topics-box h3 {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #f97316;
+    margin: 0 0 8px 0;
+    font-weight: 700;
+  }
+  .topics-box p { margin: 0; font-size: 13px; color: #555555; }
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+  }
+  .section-label h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: #111111;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .section-line { flex: 1; height: 1px; background: #e8e8e8; }
+  .section-dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; flex-shrink: 0; }
+  p { margin: 0 0 13px 0; font-size: 14.5px; color: #444444; }
+  p strong { color: #111111; font-weight: 700; }
+  ul { padding-left: 0; margin: 0 0 16px 0; list-style: none; }
+  li { font-size: 14.5px; color: #444444; padding: 7px 0 7px 20px; position: relative; border-bottom: 1px solid #f0f0f0; }
+  li:last-child { border-bottom: none; }
+  li::before { content: '→'; position: absolute; left: 0; color: #f97316; font-size: 12px; }
+  a { color: #ea6c04; text-decoration: underline; font-weight: 600; }
+  .cards-grid { display: grid; gap: 10px; margin-top: 4px; }
+  .highlight-card {
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-left: 4px solid #f97316;
+    border-radius: 0 6px 6px 0;
+    padding: 16px 18px;
+  }
+  .highlight-card h4 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0 0 5px 0;
+  }
+  .highlight-card p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #555555; }
+  .highlight-card strong { color: #f97316; font-weight: 700; }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 22px; }
+  .stat-card { background: #fff7f0; border: 1px solid #fdd5b0; border-radius: 8px; padding: 20px; text-align: center; }
+  .stat-number { font-family: Georgia, serif; font-size: 36px; font-weight: 700; color: #f97316; line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888888; font-weight: 600; }
+  .metric { color: #d9534f; font-weight: 700; }
+  .note { background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6px; padding: 13px 16px; font-size: 13px; color: #666666; font-style: italic; margin-bottom: 14px; }
+  .note strong { color: #f97316; font-style: normal; font-weight: 700; }
+  .footer { background: #f9f9f9; border-top: 1px solid #e8e8e8; padding: 20px 44px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-copy { font-size: 11px; color: #aaaaaa; }
+  .footer-tag { font-size: 10px; color: #f97316; letter-spacing: 1px; font-weight: 600; opacity: 0.75; }
+  `;
+
+  // Topics list from enabled sections
+  const topicMap = [
+    ['tog-pa', v('f-pa-title')],
+    ['tog-ea', v('f-ea-title')],
+    ['tog-cs', v('f-cs-title')],
+    ['tog-ch', 'Campaign Highlights'],
+    ['tog-qs', v('f-qs-title')],
+  ];
+  const topicItems = topicMap.filter(([id]) => checked(id)).map(([,t]) => `<span>${t}</span>`).join(' &nbsp;·&nbsp; ');
+
+  const cardsHTML = cards.map(c => `
+    <div class="highlight-card">
+      <h4>${c.title || 'Campaign'}</h4>
+      <p><strong>${c.team || ''}</strong> ${c.body || ''}</p>
+    </div>`).join('');
+
+  const noteVal = v('f-cs-note');
+  const noteHTML = noteVal ? `<div class="note"><strong>${noteVal.split('|')[0].trim()}</strong>${noteVal.includes('|') ? ' | <em>' + noteVal.split('|')[1].trim() + '</em>' : ''}</div>` : '';
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${v('f-title')}</title>
+<style>${css}</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <p class="header-eyebrow">${v('f-eyebrow')}</p>
+    <h1>${v('f-title').replace('AdOps', 'Ad<span>Ops</span>')}</h1>
+    <p class="header-sub">${v('f-subtitle')}</p>
+  </div>
+
+  <div class="content">
+
+    ${show('tog-intro') ? `<p class="intro">${v('f-intro').replace(/\n/g, '<br>')}</p>` : ''}
+
+    ${show('tog-topics') && topicItems ? `
+    <div class="topics-box">
+      <h3>In This Issue</h3>
+      <p>${topicItems}</p>
+    </div>` : ''}
+
+    ${show('tog-pa') ? `
+    <div class="section-label">
+      <div class="section-dot"></div>
+      <h2>${v('f-pa-title')}</h2>
+      <div class="section-line"></div>
+    </div>
+    ${paragraphs(v('f-pa-body'))}
+    ${v('f-pa-bullets') ? `<ul>${bulletList(v('f-pa-bullets'))}</ul>` : ''}` : ''}
+
+    ${show('tog-ea') ? `
+    <div class="section-label">
+      <div class="section-dot"></div>
+      <h2>${v('f-ea-title')}</h2>
+      <div class="section-line"></div>
+    </div>
+    ${paragraphs(v('f-ea-body'))}
+    ${v('f-ea-bullets') ? `<ul>${bulletList(v('f-ea-bullets'))}</ul>` : ''}` : ''}
+
+    ${show('tog-cs') ? `
+    <div class="section-label">
+      <div class="section-dot"></div>
+      <h2>${v('f-cs-title')}</h2>
+      <div class="section-line"></div>
+    </div>
+    ${paragraphs(v('f-cs-body'))}
+    ${noteHTML}` : ''}
+
+    ${show('tog-ch') ? `
+    <div class="section-label">
+      <div class="section-dot"></div>
+      <h2>Campaign Highlights</h2>
+      <div class="section-line"></div>
+    </div>
+    <p>${v('f-ch-intro')}</p>
+    <div class="cards-grid">${cardsHTML}</div>` : ''}
+
+    ${show('tog-qs') ? `
+    <div class="section-label">
+      <div class="section-dot"></div>
+      <h2>${v('f-qs-title')}</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number">${v('f-stat1-num')}</div>
+        <div class="stat-label">${v('f-stat1-lbl')}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${v('f-stat2-num')}</div>
+        <div class="stat-label">${v('f-stat2-lbl')}</div>
+      </div>
+    </div>
+    ${paragraphs(v('f-qs-body'))}` : ''}
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-copy">${v('f-footer')}</span>
+    <span class="footer-tag">${v('f-footer-tag')}</span>
+  </div>
+
+</div>
+</body>
+</html>`;
+}
+
+// ── Update Preview ──
+function update() {
+  const html = buildHTML(false);
+  const frame = document.getElementById('preview');
+  const doc = frame.contentDocument || frame.contentWindow.document;
+  doc.open();
+  doc.write(html);
+  doc.close();
+}
+
+// ── Export ──
+async function exportNewsletter() {
+  const html = buildHTML(true);
+  const result = await ipcRenderer.invoke('save-newsletter', html);
+  if (result.success) {
+    showToast('✓ Newsletter exported successfully!', 'success');
+  }
+}
+
+// ── Save Draft ──
+async function saveDraft() {
+  const draft = {
+    fields: {},
+    cards,
+    toggles: {}
+  };
+  document.querySelectorAll('input[type=text], textarea').forEach(el => {
+    if (el.id) draft.fields[el.id] = el.value;
+  });
+  document.querySelectorAll('input[type=checkbox]').forEach(el => {
+    if (el.id) draft.toggles[el.id] = el.checked;
+  });
+  const result = await ipcRenderer.invoke('save-draft', JSON.stringify(draft, null, 2));
+  if (result.success) showToast('✓ Draft saved!', 'success');
+}
+
+// ── Load Draft ──
+async function loadDraft() {
+  const result = await ipcRenderer.invoke('load-draft');
+  if (!result.success) return;
+  try {
+    const draft = JSON.parse(result.data);
+    if (draft.fields) {
+      Object.entries(draft.fields).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      });
+    }
+    if (draft.toggles) {
+      Object.entries(draft.toggles).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = val;
+      });
+    }
+    if (draft.cards) {
+      cards = draft.cards;
+      renderCardsList();
+    }
+    update();
+    showToast('✓ Draft loaded!', 'success');
+  } catch(e) {
+    showToast('Error loading draft.', 'error');
+  }
+}
+
+// ── Toast ──
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── Init ──
+renderCardsList();
+update();
+</script>
+</body>
+</html>
