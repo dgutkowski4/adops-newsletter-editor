@@ -583,9 +583,9 @@ Third-party platform campaigns continue to grow, now accounting for 6% of total 
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+<input type="file" id="file-input" accept=".json" style="display:none">
 
 <script>
-const { ipcRenderer } = require('electron');
 
 // ── State ──
 let cards = [
@@ -934,16 +934,20 @@ function update() {
 }
 
 // ── Export ──
-async function exportNewsletter() {
+function exportNewsletter() {
   const html = buildHTML(true);
-  const result = await ipcRenderer.invoke('save-newsletter', html);
-  if (result.success) {
-    showToast('✓ Newsletter exported successfully!', 'success');
-  }
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `adops-newsletter-${new Date().toISOString().slice(0,7)}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Newsletter exported successfully!', 'success');
 }
 
 // ── Save Draft ──
-async function saveDraft() {
+function saveDraft() {
   const draft = {
     fields: {},
     cards,
@@ -955,37 +959,52 @@ async function saveDraft() {
   document.querySelectorAll('input[type=checkbox]').forEach(el => {
     if (el.id) draft.toggles[el.id] = el.checked;
   });
-  const result = await ipcRenderer.invoke('save-draft', JSON.stringify(draft, null, 2));
-  if (result.success) showToast('✓ Draft saved!', 'success');
+  const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `adops-draft-${new Date().toISOString().slice(0,7)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Draft saved!', 'success');
 }
 
 // ── Load Draft ──
-async function loadDraft() {
-  const result = await ipcRenderer.invoke('load-draft');
-  if (!result.success) return;
-  try {
-    const draft = JSON.parse(result.data);
-    if (draft.fields) {
-      Object.entries(draft.fields).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
-      });
-    }
-    if (draft.toggles) {
-      Object.entries(draft.toggles).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.checked = val;
-      });
-    }
-    if (draft.cards) {
-      cards = draft.cards;
-      renderCardsList();
-    }
-    update();
-    showToast('✓ Draft loaded!', 'success');
-  } catch(e) {
-    showToast('Error loading draft.', 'error');
-  }
+function loadDraft() {
+  const input = document.getElementById('file-input');
+  input.onchange = function() {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const draft = JSON.parse(e.target.result);
+        if (draft.fields) {
+          Object.entries(draft.fields).forEach(([id, val]) => {
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+          });
+        }
+        if (draft.toggles) {
+          Object.entries(draft.toggles).forEach(([id, val]) => {
+            const el = document.getElementById(id);
+            if (el) el.checked = val;
+          });
+        }
+        if (draft.cards) {
+          cards = draft.cards;
+          renderCardsList();
+        }
+        update();
+        showToast('✓ Draft loaded!', 'success');
+      } catch(err) {
+        showToast('Error loading draft.', 'error');
+      }
+      input.value = '';
+    };
+    reader.readAsText(file);
+  };
+  input.click();
 }
 
 // ── Toast ──
