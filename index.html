@@ -98,12 +98,8 @@ body {
 .sidebar-panel.active { display: block; }
 
 /* ── Form Fields ── */
-.field-group {
-  margin-bottom: 20px;
-}
-.field-group + .section-divider {
-  margin-top: 4px;
-}
+.field-group { margin-bottom: 20px; }
+.field-group + .section-divider { margin-top: 4px; }
 .section-divider {
   font-size: 10px;
   font-weight: 700;
@@ -124,8 +120,7 @@ label {
   margin-bottom: 5px;
   letter-spacing: 0.3px;
 }
-input[type="text"],
-textarea {
+input[type="text"], textarea {
   width: 100%;
   padding: 8px 10px;
   border: 1px solid #e0e0e0;
@@ -137,8 +132,7 @@ textarea {
   transition: border-color 0.15s, box-shadow 0.15s;
   resize: vertical;
 }
-input[type="text"]:focus,
-textarea:focus {
+input[type="text"]:focus, textarea:focus {
   outline: none;
   border-color: #f97316;
   box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
@@ -146,7 +140,7 @@ textarea:focus {
 }
 textarea { min-height: 72px; line-height: 1.5; }
 
-/* Toggle switch */
+/* ── Toggle Switch ── */
 .toggle-row {
   display: flex;
   align-items: center;
@@ -162,12 +156,7 @@ textarea { min-height: 72px; line-height: 1.5; }
 .toggle-row:hover { background: #f5f5f5; }
 .toggle-label { font-size: 12px; font-weight: 600; color: #333; }
 .toggle-sub { font-size: 10px; color: #999; margin-top: 1px; }
-.toggle {
-  position: relative;
-  width: 36px;
-  height: 20px;
-  flex-shrink: 0;
-}
+.toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
 .toggle input { opacity: 0; width: 0; height: 0; }
 .toggle-slider {
   position: absolute;
@@ -205,11 +194,7 @@ textarea { min-height: 72px; line-height: 1.5; }
   gap: 8px;
   margin-bottom: 8px;
 }
-.card-item-header input {
-  flex: 1;
-  font-weight: 700;
-  font-size: 12px;
-}
+.card-item-header input { flex: 1; font-weight: 700; font-size: 12px; }
 .card-remove {
   background: none;
   border: none;
@@ -237,15 +222,91 @@ textarea { min-height: 72px; line-height: 1.5; }
 }
 .add-card-btn:hover { background: #fff7f0; }
 
-/* Stats inputs */
+/* ── Stats Editor ── */
+.stat-row-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 .stat-row-inputs {
+  flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+.stat-input-group label { font-size: 10px; }
+
+/* ── Table Editor ── */
+.stat-table-editor {
+  background: #fafafa;
+  border: 1px solid #e8e8e8;
+  border-left: 3px solid #f97316;
+  border-radius: 0 8px 8px 0;
+  padding: 12px;
   margin-bottom: 10px;
 }
-.stat-input-group { }
-.stat-input-group label { font-size: 10px; }
+.stat-table-editor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.stat-table-editor-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+.editor-tbl-wrap { overflow-x: auto; margin-bottom: 8px; }
+.editor-tbl { border-collapse: collapse; width: 100%; }
+.editor-tbl th, .editor-tbl td { border: 1px solid #e0e0e0; padding: 2px; }
+.editor-tbl th { background: #fff7f0; }
+.editor-tbl input[type="text"] {
+  width: 100%;
+  min-width: 60px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 11px;
+  font-family: inherit;
+  color: #1a1a1a;
+  box-shadow: none;
+}
+.editor-tbl input[type="text"]:focus {
+  background: #fff;
+  box-shadow: none;
+  border: none;
+  outline: 1px solid #f97316;
+}
+.tbl-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.tbl-action-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  color: #555;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.tbl-action-btn:hover { background: #f5f5f5; }
+.tbl-action-btn.danger { color: #e53e3e; border-color: #fca5a5; }
+.tbl-action-btn.danger:hover { background: #fff0f0; }
+.tbl-row-remove {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 3px;
+  line-height: 1;
+}
+.tbl-row-remove:hover { color: #e53e3e; }
 
 /* ── Preview Panel ── */
 .preview-panel {
@@ -272,10 +333,7 @@ textarea { min-height: 72px; line-height: 1.5; }
   color: #888;
 }
 .preview-spacer { flex: 1; }
-.preview-note {
-  font-size: 11px;
-  color: #aaa;
-}
+.preview-note { font-size: 11px; color: #aaa; }
 .preview-frame-wrap {
   flex: 1;
   overflow: auto;
@@ -352,7 +410,7 @@ iframe#preview {
         <input type="text" id="f-title" value="AdOps Newsletter" oninput="update()">
       </div>
       <div class="field-group">
-        <label>Issue Subtitle (e.g. "February &amp; March Update")</label>
+        <label>Issue Subtitle</label>
         <input type="text" id="f-subtitle" value="February &amp; March 2026" oninput="update()">
       </div>
       <div class="field-group">
@@ -368,7 +426,7 @@ iframe#preview {
 I hope everyone has had a great week. Here is a combined Newsletter detailing what's new in the world of AdOps!</textarea>
       </div>
 
-      <div class="section-divider">Pause Ads Section</div>
+      <div class="section-divider">Section 1</div>
       <div class="field-group">
         <label>Section Title</label>
         <input type="text" id="f-pa-title" value="Pause Ads" oninput="update()">
@@ -389,7 +447,7 @@ This Confluence page details what is available for premium Pause Ads. Note: All 
 Very high client minimum — all products are north of $300k client spends.</textarea>
       </div>
 
-      <div class="section-divider">Efficiency Applications Section</div>
+      <div class="section-divider">Section 2</div>
       <div class="field-group">
         <label>Section Title</label>
         <input type="text" id="f-ea-title" value="Efficiency Applications" oninput="update()">
@@ -407,7 +465,7 @@ Save media plans to edit at a later date.
 Export data to Excel to share with others.</textarea>
       </div>
 
-      <div class="section-divider">Coming Soon Section</div>
+      <div class="section-divider">Section 3</div>
       <div class="field-group">
         <label>Section Title</label>
         <input type="text" id="f-cs-title" value="Coming Soon: Amazon Sponsored Ads" oninput="update()">
@@ -423,37 +481,25 @@ We'll share internal and external one-sheeters with the full team announcement w
         <input type="text" id="f-cs-note" value="Key advantage: Zero pixels needed. | Note: Geo-targeting is limited to country-wide." oninput="update()">
       </div>
 
+      <div class="section-divider">Custom Sections</div>
+      <p style="font-size:11px;color:#999;margin-bottom:14px;line-height:1.5;">
+        Add sections that appear above Campaign Highlights. Toggle visibility in the Sections tab.
+      </p>
+      <div id="custom-sections-list"></div>
+      <button class="add-card-btn" style="margin-bottom:4px" onclick="addCustomSection()">+ Add Custom Section</button>
+
       <div class="section-divider">Campaign Highlights Intro</div>
       <div class="field-group">
         <label>Intro paragraph</label>
         <textarea id="f-ch-intro" rows="2" oninput="update()">This section is dedicated to the teams on our largest campaigns who consistently go above and beyond.</textarea>
       </div>
 
-      <div class="section-divider">Q1 Stats Section</div>
+      <div class="section-divider">Highlights</div>
       <div class="field-group">
         <label>Section Title</label>
         <input type="text" id="f-qs-title" value="Q1 Stats" oninput="update()">
       </div>
-      <div class="stat-row-inputs">
-        <div class="stat-input-group">
-          <label>Stat 1 Number</label>
-          <input type="text" id="f-stat1-num" value="65%" oninput="update()">
-        </div>
-        <div class="stat-input-group">
-          <label>Stat 1 Label</label>
-          <input type="text" id="f-stat1-lbl" value="Overall Margin" oninput="update()">
-        </div>
-      </div>
-      <div class="stat-row-inputs">
-        <div class="stat-input-group">
-          <label>Stat 2 Number</label>
-          <input type="text" id="f-stat2-num" value="6%" oninput="update()">
-        </div>
-        <div class="stat-input-group">
-          <label>Stat 2 Label</label>
-          <input type="text" id="f-stat2-lbl" value="3P Platform Revenue Share" oninput="update()">
-        </div>
-      </div>
+      <div id="stats-editor"></div>
       <div class="field-group">
         <label>Summary Paragraph</label>
         <textarea id="f-qs-body" rows="4" oninput="update()">An impressive 65% overall margin across all managed service clients — this would not be possible without the Ops team's hard work ensuring smart media purchases that meet both client KPIs and internal goals.
@@ -503,8 +549,8 @@ Third-party platform campaigns continue to grow, now accounting for 6% of total 
 
       <div class="toggle-row" onclick="toggleSection('pause-block')">
         <div>
-          <div class="toggle-label">Pause Ads</div>
-          <div class="toggle-sub">OpenGlass / SSP updates</div>
+          <div class="toggle-label">Section 1</div>
+          <div class="toggle-sub">Section 1 area</div>
         </div>
         <label class="toggle" onclick="event.stopPropagation()">
           <input type="checkbox" id="tog-pa" checked onchange="update()">
@@ -514,8 +560,8 @@ Third-party platform campaigns continue to grow, now accounting for 6% of total 
 
       <div class="toggle-row" onclick="toggleSection('efficiency-block')">
         <div>
-          <div class="toggle-label">Efficiency Applications</div>
-          <div class="toggle-sub">Tools & app announcements</div>
+          <div class="toggle-label">Section 2</div>
+          <div class="toggle-sub">Section 2 area</div>
         </div>
         <label class="toggle" onclick="event.stopPropagation()">
           <input type="checkbox" id="tog-ea" checked onchange="update()">
@@ -525,14 +571,17 @@ Third-party platform campaigns continue to grow, now accounting for 6% of total 
 
       <div class="toggle-row" onclick="toggleSection('comingsoon-block')">
         <div>
-          <div class="toggle-label">Coming Soon</div>
-          <div class="toggle-sub">Product pipeline announcements</div>
+          <div class="toggle-label">Section 3</div>
+          <div class="toggle-sub">Section 3 area</div>
         </div>
         <label class="toggle" onclick="event.stopPropagation()">
           <input type="checkbox" id="tog-cs" checked onchange="update()">
           <span class="toggle-slider"></span>
         </label>
       </div>
+
+      <!-- Custom section toggles injected here -->
+      <div id="custom-section-toggles"></div>
 
       <div class="toggle-row" onclick="toggleSection('highlights-block')">
         <div>
@@ -547,8 +596,8 @@ Third-party platform campaigns continue to grow, now accounting for 6% of total 
 
       <div class="toggle-row" onclick="toggleSection('stats-block')">
         <div>
-          <div class="toggle-label">Q1 Stats</div>
-          <div class="toggle-sub">Margin & revenue metrics</div>
+          <div class="toggle-label">Stats</div>
+          <div class="toggle-sub">Margin &amp; revenue metrics</div>
         </div>
         <label class="toggle" onclick="event.stopPropagation()">
           <input type="checkbox" id="tog-qs" checked onchange="update()">
@@ -595,6 +644,14 @@ let cards = [
   { title: 'AdmerAsia + Sticky Pixel', team: 'Naomi, Sam, Jeremy, David, and seven traffic managers', body: 'consistently deliver for our top client across last-minute setups, strict guidelines, dozens of budget splits, complex language targeting, and 125 million impressions served this quarter.' },
 ];
 
+let customSections = [];
+let stats = [
+  { num: '65%', lbl: 'Overall Margin' },
+  { num: '6%',  lbl: '3P Platform Revenue Share' },
+];
+let statTables = [];
+let _sectionIdCounter = 0;
+
 // ── Tab Switching ──
 function switchTab(name) {
   document.querySelectorAll('.sidebar-tab').forEach((t, i) => {
@@ -607,19 +664,19 @@ function switchTab(name) {
 
 function toggleSection(id) {
   const map = {
-    'intro-block': 'tog-intro',
-    'topics-block': 'tog-topics',
-    'pause-block': 'tog-pa',
+    'intro-block':      'tog-intro',
+    'topics-block':     'tog-topics',
+    'pause-block':      'tog-pa',
     'efficiency-block': 'tog-ea',
     'comingsoon-block': 'tog-cs',
     'highlights-block': 'tog-ch',
-    'stats-block': 'tog-qs',
+    'stats-block':      'tog-qs',
   };
   const cb = document.getElementById(map[id]);
   if (cb) { cb.checked = !cb.checked; update(); }
 }
 
-// ── Card Management ──
+// ── Campaign Card Management ──
 function renderCardsList() {
   const list = document.getElementById('cards-list');
   list.innerHTML = '';
@@ -650,7 +707,6 @@ function addCard() {
   cards.push({ title: '', team: '', body: '' });
   renderCardsList();
   update();
-  // Scroll to bottom of cards list
   const panel = document.getElementById('tab-cards');
   setTimeout(() => panel.scrollTop = panel.scrollHeight, 50);
 }
@@ -661,118 +717,230 @@ function removeCard(i) {
   update();
 }
 
+// ── Custom Section Management ──
+function addCustomSection() {
+  customSections.push({ id: 'sec-' + (++_sectionIdCounter), title: '', body: '', bullets: '', enabled: true });
+  renderCustomSections();
+  update();
+}
+
+function removeCustomSection(i) {
+  customSections.splice(i, 1);
+  renderCustomSections();
+  update();
+}
+
+function _toggleCustomSection(i) {
+  customSections[i].enabled = !customSections[i].enabled;
+  renderCustomSections();
+  update();
+}
+
+function _syncCustomSectionToggleLabel(i) {
+  const el = document.getElementById('custom-toggle-label-' + i);
+  if (el) el.textContent = customSections[i].title || 'Custom Section ' + (i + 1);
+}
+
+function renderCustomSections() {
+  const list = document.getElementById('custom-sections-list');
+  if (list) {
+    list.innerHTML = customSections.map((sec, i) => `
+      <div class="card-item">
+        <div class="card-item-header">
+          <input type="text" placeholder="Section Title" value="${esc(sec.title)}"
+            oninput="customSections[${i}].title=this.value;update();_syncCustomSectionToggleLabel(${i})">
+          <button class="card-remove" onclick="removeCustomSection(${i})" title="Remove">×</button>
+        </div>
+        <div style="margin-bottom:6px">
+          <label>Body Content</label>
+          <textarea rows="4" placeholder="Section body text..."
+            oninput="customSections[${i}].body=this.value;update()">${esc(sec.body)}</textarea>
+        </div>
+        <div>
+          <label>Bullet Points (one per line, leave blank for none)</label>
+          <textarea rows="2" placeholder="One bullet per line..."
+            oninput="customSections[${i}].bullets=this.value;update()">${esc(sec.bullets)}</textarea>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const toggles = document.getElementById('custom-section-toggles');
+  if (toggles) {
+    toggles.innerHTML = customSections.map((sec, i) => `
+      <div class="toggle-row" onclick="_toggleCustomSection(${i})">
+        <div>
+          <div class="toggle-label" id="custom-toggle-label-${i}">${esc(sec.title) || 'Custom Section ' + (i + 1)}</div>
+          <div class="toggle-sub">Custom content section</div>
+        </div>
+        <label class="toggle" onclick="event.stopPropagation()">
+          <input type="checkbox" ${sec.enabled ? 'checked' : ''} onchange="customSections[${i}].enabled=this.checked;update()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    `).join('');
+  }
+}
+
+// ── Stats Management ──
+function addStat() {
+  stats.push({ num: '', lbl: '' });
+  renderStatsEditor();
+  update();
+}
+
+function removeStat(i) {
+  stats.splice(i, 1);
+  renderStatsEditor();
+  update();
+}
+
+function addStatTable() {
+  statTables.push({ headers: ['Column 1', 'Column 2'], rows: [['', '']] });
+  renderStatsEditor();
+  update();
+}
+
+function removeStatTable(i) {
+  statTables.splice(i, 1);
+  renderStatsEditor();
+  update();
+}
+
+function addStatTableRow(i) {
+  const cols = statTables[i].headers.length;
+  statTables[i].rows.push(new Array(cols).fill(''));
+  renderStatsEditor();
+  update();
+}
+
+function removeStatTableRow(i, r) {
+  if (statTables[i].rows.length <= 1) return;
+  statTables[i].rows.splice(r, 1);
+  renderStatsEditor();
+  update();
+}
+
+function addStatTableCol(i) {
+  statTables[i].headers.push('Column ' + (statTables[i].headers.length + 1));
+  statTables[i].rows.forEach(row => row.push(''));
+  renderStatsEditor();
+  update();
+}
+
+function removeStatTableCol(i) {
+  if (statTables[i].headers.length <= 1) return;
+  statTables[i].headers.pop();
+  statTables[i].rows.forEach(row => row.pop());
+  renderStatsEditor();
+  update();
+}
+
+function renderStatsEditor() {
+  const container = document.getElementById('stats-editor');
+  if (!container) return;
+
+  let html = stats.map((stat, i) => `
+    <div class="stat-row-wrap">
+      <div class="stat-row-inputs">
+        <div class="stat-input-group">
+          <label>Stat ${i + 1} Number</label>
+          <input type="text" value="${esc(stat.num)}" placeholder="e.g. 65%"
+            oninput="stats[${i}].num=this.value;update()">
+        </div>
+        <div class="stat-input-group">
+          <label>Stat ${i + 1} Label</label>
+          <input type="text" value="${esc(stat.lbl)}" placeholder="e.g. Overall Margin"
+            oninput="stats[${i}].lbl=this.value;update()">
+        </div>
+      </div>
+      <button class="card-remove" onclick="removeStat(${i})" title="Remove stat">×</button>
+    </div>
+  `).join('');
+
+  html += `<button class="add-card-btn" style="margin-bottom:14px" onclick="addStat()">+ Add Stat</button>`;
+
+  html += statTables.map((tbl, i) => `
+    <div class="stat-table-editor">
+      <div class="stat-table-editor-header">
+        <span class="stat-table-editor-title">Table ${i + 1}</span>
+        <button class="tbl-action-btn danger" onclick="removeStatTable(${i})">Remove Table</button>
+      </div>
+      <div class="editor-tbl-wrap">
+        <table class="editor-tbl">
+          <thead>
+            <tr>
+              ${tbl.headers.map((h, j) => `
+                <th><input type="text" value="${esc(h)}" placeholder="Header ${j + 1}"
+                  oninput="statTables[${i}].headers[${j}]=this.value;update()"></th>
+              `).join('')}
+              <td style="width:22px;background:#fafafa;border-left:2px solid #e8e8e8;text-align:center">
+                <button class="tbl-row-remove" onclick="removeStatTableCol(${i})" title="Remove last column">−</button>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            ${tbl.rows.map((row, r) => `
+              <tr>
+                ${row.map((cell, c) => `
+                  <td><input type="text" value="${esc(cell)}" placeholder=""
+                    oninput="statTables[${i}].rows[${r}][${c}]=this.value;update()"></td>
+                `).join('')}
+                <td style="width:22px;background:#fafafa;border-left:2px solid #e8e8e8;text-align:center">
+                  <button class="tbl-row-remove" onclick="removeStatTableRow(${i},${r})" title="Remove row">×</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-actions">
+        <button class="tbl-action-btn" onclick="addStatTableRow(${i})">+ Row</button>
+        <button class="tbl-action-btn" onclick="addStatTableCol(${i})">+ Column</button>
+      </div>
+    </div>
+  `).join('');
+
+  html += `<button class="add-card-btn" style="margin-bottom:14px" onclick="addStatTable()">+ Add Table</button>`;
+
+  container.innerHTML = html;
+}
+
+// ── Helpers ──
 function esc(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
-// ── Get field values ──
 function v(id) { return document.getElementById(id)?.value || ''; }
 function checked(id) { return document.getElementById(id)?.checked !== false; }
 
 function bulletList(text) {
-  return text.split('\n').filter(l => l.trim()).map(l =>
-    `<li>${l.trim()}</li>`
-  ).join('');
+  return text.split('\n').filter(l => l.trim()).map(l => `<li>${l.trim()}</li>`).join('');
 }
 
 function paragraphs(text) {
-  return text.split('\n').filter(l => l.trim()).map(l =>
-    `<p>${l.trim()}</p>`
-  ).join('');
+  return text.split('\n').filter(l => l.trim()).map(l => `<p>${l.trim()}</p>`).join('');
 }
 
 // ── Build Newsletter HTML ──
 function buildHTML(forExport = false) {
   const show = (id) => checked(id);
 
-  // Inline the full CSS (Gmail-compatible)
   const css = `
   * { box-sizing: border-box; }
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f0f0f0;
-    color: #1a1a1a;
-    margin: 0;
-    padding: 24px 12px 48px;
-    line-height: 1.65;
-  }
-  .container {
-    max-width: 640px;
-    margin: 0 auto;
-    background: #ffffff;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  }
-  .header {
-    background: #ffffff;
-    padding: 36px 44px 28px;
-    border-bottom: 3px solid #f97316;
-  }
-  .header-eyebrow {
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: #f97316;
-    margin: 0 0 8px 0;
-    font-weight: 600;
-  }
-  .header h1 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin: 0 0 4px 0;
-    color: #111111;
-  }
+  body { font-family: Arial, Helvetica, sans-serif; background-color: #f0f0f0; color: #1a1a1a; margin: 0; padding: 24px 12px 48px; line-height: 1.65; }
+  .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .header { background: #ffffff; padding: 36px 44px 28px; border-bottom: 3px solid #f97316; }
+  .header-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #f97316; margin: 0 0 8px 0; font-weight: 600; }
+  .header h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; margin: 0 0 4px 0; color: #111111; }
   .header h1 span { color: #f97316; }
-  .header-sub {
-    font-size: 11px;
-    color: #888888;
-    letter-spacing: 1px;
-    margin: 0;
-    text-transform: uppercase;
-  }
+  .header-sub { font-size: 11px; color: #888888; letter-spacing: 1px; margin: 0; text-transform: uppercase; }
   .content { padding: 32px 44px; }
-  .intro {
-    font-size: 15px;
-    color: #333333;
-    margin-bottom: 26px;
-    line-height: 1.75;
-  }
-  .topics-box {
-    background: #fff7f0;
-    border: 1px solid #fdd5b0;
-    border-left: 4px solid #f97316;
-    border-radius: 0 6px 6px 0;
-    padding: 16px 20px;
-    margin-bottom: 36px;
-  }
-  .topics-box h3 {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #f97316;
-    margin: 0 0 8px 0;
-    font-weight: 700;
-  }
+  .intro { font-size: 15px; color: #333333; margin-bottom: 26px; line-height: 1.75; }
+  .topics-box { background: #fff7f0; border: 1px solid #fdd5b0; border-left: 4px solid #f97316; border-radius: 0 6px 6px 0; padding: 16px 20px; margin-bottom: 36px; }
+  .topics-box h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #f97316; margin: 0 0 8px 0; font-weight: 700; }
   .topics-box p { margin: 0; font-size: 13px; color: #555555; }
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 40px;
-    margin-bottom: 14px;
-  }
-  .section-label h2 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-weight: 700;
-    font-size: 19px;
-    color: #111111;
-    margin: 0;
-    white-space: nowrap;
-  }
+  .section-label { display: flex; align-items: center; gap: 10px; margin-top: 40px; margin-bottom: 14px; }
+  .section-label h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 700; font-size: 19px; color: #111111; margin: 0; white-space: nowrap; }
   .section-line { flex: 1; height: 1px; background: #e8e8e8; }
   .section-dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; flex-shrink: 0; }
   p { margin: 0 0 13px 0; font-size: 14.5px; color: #444444; }
@@ -783,43 +951,35 @@ function buildHTML(forExport = false) {
   li::before { content: '→'; position: absolute; left: 0; color: #f97316; font-size: 12px; }
   a { color: #ea6c04; text-decoration: underline; font-weight: 600; }
   .cards-grid { display: grid; gap: 10px; margin-top: 4px; }
-  .highlight-card {
-    background: #fafafa;
-    border: 1px solid #e8e8e8;
-    border-left: 4px solid #f97316;
-    border-radius: 0 6px 6px 0;
-    padding: 16px 18px;
-  }
-  .highlight-card h4 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: #111111;
-    margin: 0 0 5px 0;
-  }
+  .highlight-card { background: #fafafa; border: 1px solid #e8e8e8; border-left: 4px solid #f97316; border-radius: 0 6px 6px 0; padding: 16px 18px; }
+  .highlight-card h4 { font-family: Georgia, 'Times New Roman', serif; font-size: 15px; font-weight: 700; color: #111111; margin: 0 0 5px 0; }
   .highlight-card p { margin: 0; font-size: 13.5px; line-height: 1.6; color: #555555; }
   .highlight-card strong { color: #f97316; font-weight: 700; }
-  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 22px; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 18px 0 22px; }
   .stat-card { background: #fff7f0; border: 1px solid #fdd5b0; border-radius: 8px; padding: 20px; text-align: center; }
   .stat-number { font-family: Georgia, serif; font-size: 36px; font-weight: 700; color: #f97316; line-height: 1; margin-bottom: 6px; }
   .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888888; font-weight: 600; }
-  .metric { color: #d9534f; font-weight: 700; }
   .note { background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6px; padding: 13px 16px; font-size: 13px; color: #666666; font-style: italic; margin-bottom: 14px; }
   .note strong { color: #f97316; font-style: normal; font-weight: 700; }
+  .nl-table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; }
+  .nl-table th { background: #f97316; color: #ffffff; padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+  .nl-table td { padding: 9px 14px; font-size: 13.5px; border-bottom: 1px solid #f0f0f0; color: #444444; text-align: center; }
+  .nl-table tr:last-child td { border-bottom: none; }
+  .nl-table tr:nth-child(even) td { background: #fafafa; }
   .footer { background: #f9f9f9; border-top: 1px solid #e8e8e8; padding: 20px 44px; display: flex; align-items: center; justify-content: space-between; }
   .footer-copy { font-size: 11px; color: #aaaaaa; }
   .footer-tag { font-size: 10px; color: #f97316; letter-spacing: 1px; font-weight: 600; opacity: 0.75; }
   `;
 
-  // Topics list from enabled sections
-  const topicMap = [
-    ['tog-pa', v('f-pa-title')],
-    ['tog-ea', v('f-ea-title')],
-    ['tog-cs', v('f-cs-title')],
-    ['tog-ch', 'Campaign Highlights'],
-    ['tog-qs', v('f-qs-title')],
-  ];
-  const topicItems = topicMap.filter(([id]) => checked(id)).map(([,t]) => `<span>${t}</span>`).join(' &nbsp;·&nbsp; ');
+  // Build "In This Issue" topics
+  const topicParts = [];
+  if (checked('tog-pa')) topicParts.push(v('f-pa-title'));
+  if (checked('tog-ea')) topicParts.push(v('f-ea-title'));
+  if (checked('tog-cs')) topicParts.push(v('f-cs-title'));
+  customSections.filter(s => s.enabled).forEach(s => topicParts.push(s.title || 'Custom Section'));
+  if (checked('tog-ch')) topicParts.push('Campaign Highlights');
+  if (checked('tog-qs')) topicParts.push(v('f-qs-title'));
+  const topicItems = topicParts.map(t => `<span>${t}</span>`).join(' &nbsp;·&nbsp; ');
 
   const cardsHTML = cards.map(c => `
     <div class="highlight-card">
@@ -829,6 +989,30 @@ function buildHTML(forExport = false) {
 
   const noteVal = v('f-cs-note');
   const noteHTML = noteVal ? `<div class="note"><strong>${noteVal.split('|')[0].trim()}</strong>${noteVal.includes('|') ? ' | <em>' + noteVal.split('|')[1].trim() + '</em>' : ''}</div>` : '';
+
+  const statsRowHTML = stats.length > 0 ? `
+    <div class="stats-row">
+      ${stats.map(s => `
+      <div class="stat-card">
+        <div class="stat-number">${s.num}</div>
+        <div class="stat-label">${s.lbl}</div>
+      </div>`).join('')}
+    </div>` : '';
+
+  const statTablesHTML = statTables.map(tbl => `
+    <table class="nl-table">
+      <thead><tr>${tbl.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${tbl.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`).join('');
+
+  const customSectionsHTML = customSections.filter(s => s.enabled).map(sec => `
+    <div class="section-label">
+      <div class="section-dot"></div>
+      <h2>${sec.title || 'Section'}</h2>
+      <div class="section-line"></div>
+    </div>
+    ${paragraphs(sec.body)}
+    ${sec.bullets ? `<ul>${bulletList(sec.bullets)}</ul>` : ''}`).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -884,6 +1068,8 @@ function buildHTML(forExport = false) {
     ${paragraphs(v('f-cs-body'))}
     ${noteHTML}` : ''}
 
+    ${customSectionsHTML}
+
     ${show('tog-ch') ? `
     <div class="section-label">
       <div class="section-dot"></div>
@@ -899,16 +1085,8 @@ function buildHTML(forExport = false) {
       <h2>${v('f-qs-title')}</h2>
       <div class="section-line"></div>
     </div>
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-number">${v('f-stat1-num')}</div>
-        <div class="stat-label">${v('f-stat1-lbl')}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">${v('f-stat2-num')}</div>
-        <div class="stat-label">${v('f-stat2-lbl')}</div>
-      </div>
-    </div>
+    ${statsRowHTML}
+    ${statTablesHTML}
     ${paragraphs(v('f-qs-body'))}` : ''}
 
   </div>
@@ -948,11 +1126,7 @@ function exportNewsletter() {
 
 // ── Save Draft ──
 function saveDraft() {
-  const draft = {
-    fields: {},
-    cards,
-    toggles: {}
-  };
+  const draft = { fields: {}, cards, toggles: {}, customSections, stats, statTables };
   document.querySelectorAll('input[type=text], textarea').forEach(el => {
     if (el.id) draft.fields[el.id] = el.value;
   });
@@ -991,10 +1165,15 @@ function loadDraft() {
             if (el) el.checked = val;
           });
         }
-        if (draft.cards) {
-          cards = draft.cards;
-          renderCardsList();
+        if (draft.cards) { cards = draft.cards; renderCardsList(); }
+        if (draft.customSections) {
+          customSections = draft.customSections;
+          _sectionIdCounter = customSections.length;
+          renderCustomSections();
         }
+        if (draft.stats) stats = draft.stats;
+        if (draft.statTables) statTables = draft.statTables;
+        renderStatsEditor();
         update();
         showToast('✓ Draft loaded!', 'success');
       } catch(err) {
@@ -1017,6 +1196,8 @@ function showToast(msg, type = '') {
 
 // ── Init ──
 renderCardsList();
+renderCustomSections();
+renderStatsEditor();
 update();
 </script>
 </body>
